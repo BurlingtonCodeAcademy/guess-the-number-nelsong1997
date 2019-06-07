@@ -73,12 +73,14 @@ async function start() {
       j = 3;
     }
   }
+
   console.log('Awesome! I will now attempt to guess your number, which is between ' + min + ' and ' + max + '.');
   let cutMeInHalf = (max - min)/2;
   let guess = Math.round(cutMeInHalf) + min;
   let tries = 1;
-  let i = 0;
-    while (i===0) {
+  let guessMax = max + 1;
+  let guessMin = min - 1;
+    while (true) {
        response = await ask('Is your number... ' + guess + '? (Y=Yes; L=No, my number is lower; H=No, my number is higher)\n');
        if (response=='y' || response=='Y') {
             if (tries===1) {
@@ -86,22 +88,27 @@ async function start() {
             } else {
                 console.log('Yay! I guessed your number in ' + tries + ' tries. Bye!');
             }
-            i = 1;
             process.exit();
         } else if (response=='L' || response=='l') {
             tries = tries + 1;
+            if (guessMin===guess - 1) {
+              console.log('Wait, but you said your number was greater than ' + guessMin + '! Next time, play without cheating!!!! >:(');
+              process.exit();
+            }
+            guessMax = guess;
             cutMeInHalf = cutMeInHalf/2;
             addMe = Math.round(cutMeInHalf);
             if (addMe < 1) {
                 addMe = 1;
             }
             guess = guess - addMe;
-            if (guess < 1) {
-                console.log('Hey! Your number can\'t be less than 1! Next time, play without cheating!!!!');
-                process.exit();
-            }
         } else if (response=='H' || response=='h')  {
             tries = tries + 1;
+            if (guessMax===guess + 1) {
+              console.log('Wait, but you said your number was less than ' + guessMax + '! Next time, play without cheating!!!! >:(');
+              process.exit();
+            }
+            guessMin = guess;
             cutMeInHalf = cutMeInHalf/2;
             addMe = Math.round(cutMeInHalf);
             if (addMe < 1) {
@@ -112,5 +119,4 @@ async function start() {
             console.log('ERROR: Bad input. It\'s okay, just try again!')
             }
   }
-  process.exit();
 }
