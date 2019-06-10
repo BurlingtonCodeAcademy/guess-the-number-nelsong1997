@@ -305,8 +305,10 @@ async function start() {
         } else if (Number(response) <= guessMin) {
           response = await ask('Nope! I already said my number is HIGHER than ' + guessMin + '. Guess again!\n');
         } else if (Number(response) > randomNumber) {
+          guessMax = response;
           response = await ask('Nope! My number is LOWER than ' + response + '. Guess again!\n');
         } else if (Number(response) < randomNumber) {
+          guessMin = response;
           response = await ask('Nope! My number is HIGHER than ' + response + '. Guess again!\n');
         } else {
           console.log('Fatal error: unhandled exception :(');
